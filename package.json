@@ -30,8 +30,8 @@
     "react-spring": "^8.0.27"
   },
   "peerDependencies": {
-    "react": "^16.6.1",
-    "react-dom": "^16.6.3"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "keywords": [
     "react",
