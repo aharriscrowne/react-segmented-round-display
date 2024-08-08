@@ -68,6 +68,7 @@ var SegmentedRoundDisplay = function SegmentedRoundDisplay(_ref) {
       animated = _ref.animated,
       formatValue = _ref.formatValue,
       incompleteArcColor = _ref.incompleteArcColor,
+      strokeLinecap = _ref.strokeLinecap,
       displayValue = _ref.displayValue,
       valueBoxColor = _ref.valueBoxColor,
       valueFontColor = _ref.valueFontColor;
@@ -164,7 +165,7 @@ var SegmentedRoundDisplay = function SegmentedRoundDisplay(_ref) {
       fill: "none",
       stroke: emptyArcColor,
       strokeWidth: emptyArcWidth,
-      strokeLinecap: "round",
+      strokeLinecap: strokeLinecap,
       d: drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.end)
     }), animated && arc.filled > arc.start && /*#__PURE__*/_react["default"].createElement(_renderprops.Spring, {
       from: {
@@ -184,14 +185,14 @@ var SegmentedRoundDisplay = function SegmentedRoundDisplay(_ref) {
         fill: "none",
         stroke: arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor,
         strokeWidth: props.y,
-        strokeLinecap: "round",
+        strokeLinecap: strokeLinecap,
         d: drawArc(arc.centerX, arc.centerY, radius, arc.start, props.x)
       });
     }), !animated && arc.filled > arc.start && /*#__PURE__*/_react["default"].createElement("path", {
       fill: "none",
       stroke: arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor,
       strokeWidth: filledArcWidth,
-      strokeLinecap: "round",
+      strokeLinecap: strokeLinecap,
       d: drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.filled)
     }));
   }), displayValue && /*#__PURE__*/_react["default"].createElement("g", null, !animated && renderDisplayValue(), animated && /*#__PURE__*/_react["default"].createElement(_renderprops.Spring, {
@@ -229,6 +230,7 @@ SegmentedRoundDisplay.propTypes = {
   animated: _propTypes["default"].bool,
   formatValue: _propTypes["default"].func,
   incompleteArcColor: _propTypes["default"].string,
+  strokeLinecap: _propTypes["default"].string,
   displayValue: _propTypes["default"].bool,
   valueBoxColor: _propTypes["default"].string,
   valueFontColor: _propTypes["default"].string
@@ -245,6 +247,7 @@ SegmentedRoundDisplay.defaultProps = {
   animationDuration: 1000,
   animated: true,
   incompleteArcColor: '#23318C',
+  strokeLinecap: 'round',
   displayValue: false,
   valueBoxColor: '#23318C',
   valueFontColor: '#FFFFFF'
