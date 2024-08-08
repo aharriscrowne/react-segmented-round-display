@@ -17,6 +17,7 @@ const SegmentedRoundDisplay = ({
     animated,
     formatValue,
     incompleteArcColor,
+    strokeLinecap,
     displayValue,
     valueBoxColor,
     valueFontColor
@@ -98,16 +99,16 @@ const SegmentedRoundDisplay = ({
         <svg width={svgWidth} height={svgHeight} style={style}>
             {arcs.map((arc, index) => (
                 <g key={index.toString()}>
-                    <path fill="none" stroke={emptyArcColor} strokeWidth={emptyArcWidth} strokeLinecap="round" d={drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.end)} />
+                    <path fill="none" stroke={emptyArcColor} strokeWidth={emptyArcWidth} strokeLinecap={strokeLinecap} d={drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.end)} />
 
                     {animated && arc.filled > arc.start && (
                         <Spring from={{ x: arc.start, y: 0 }} to={{ x: arc.filled + 0.6, y: filledArcWidth }} config={{ duration: animationDuration / totalArcs, delay: animationDuration / totalArcs * index }}>
-                            {props => (<path fill="none" stroke={arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor} strokeWidth={props.y} strokeLinecap="round" d={drawArc(arc.centerX, arc.centerY, radius, arc.start, props.x)} />)}
+                            {props => (<path fill="none" stroke={arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor} strokeWidth={props.y} strokeLinecap={strokeLinecap} d={drawArc(arc.centerX, arc.centerY, radius, arc.start, props.x)} />)}
                         </Spring>
                     )}
 
                     {!animated && arc.filled > arc.start && (
-                        <path fill="none" stroke={arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor} strokeWidth={filledArcWidth} strokeLinecap="round" d={drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.filled)} />
+                        <path fill="none" stroke={arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor} strokeWidth={filledArcWidth} strokeLinecap={strokeLinecap} d={drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.filled)} />
                     )}
                 </g>
             ))}
@@ -149,6 +150,7 @@ SegmentedRoundDisplay.propTypes = {
     animated: PropTypes.bool,
     formatValue: PropTypes.func,
     incompleteArcColor: PropTypes.string,
+    strokeLinecap: PropTypes.string,
     displayValue: PropTypes.bool,
     valueBoxColor: PropTypes.string,
     valueFontColor: PropTypes.string
@@ -166,6 +168,7 @@ SegmentedRoundDisplay.defaultProps = {
     animationDuration: 1000,
     animated: true,
     incompleteArcColor: '#23318C',
+    strokeLinecap: 'round',
     displayValue: false,
     valueBoxColor: '#23318C',
     valueFontColor: '#FFFFFF'
