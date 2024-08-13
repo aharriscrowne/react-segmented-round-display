@@ -20,7 +20,8 @@ const SegmentedRoundDisplay = ({
     strokeLinecap,
     displayValue,
     valueBoxColor,
-    valueFontColor
+    valueFontColor,
+    valueBoxType
 }) => {
 
     const [arcs, setArcs] = useState([]);
@@ -78,13 +79,27 @@ const SegmentedRoundDisplay = ({
 
         const formatedValue = formatValue ? formatValue(value || totalFilledValue) : parseInt(value || totalFilledValue);
 
-        return (
+        var displayValueBox;
+        switch (valueBoxType) {
+          case "needle":
+            displayValueBox = (
+                <g>
+                    <rect x={-57} y={0} width="90" height="8" fill={valueBoxColor} transform={`translate(${pos.x},${pos.y}) rotate(${angle}`} rx={0} />
+                </g>
+                );
+
+            break;
+            
+          default:
+            displayValueBox = (
             <g>
                 <rect x={boxFinalPosition.x} y={boxFinalPosition.y} width="80" height="25" fill={valueBoxColor} rx={3} />
                 <rect width="10" height="10" fill={valueBoxColor} transform={`translate(${pos.x},${pos.y}) rotate(45)`} rx={2} />
                 <text x={pos.x} font-weight="bold" fontSize={14} y={boxFinalPosition.y + 18} fill={valueFontColor} text-anchor="middle">{formatedValue}</text>
-            </g>
-        )
+            </g>);
+        }
+    
+        return displayValueBox;
     }
 
     useEffect(() => {
@@ -153,7 +168,8 @@ SegmentedRoundDisplay.propTypes = {
     strokeLinecap: PropTypes.string,
     displayValue: PropTypes.bool,
     valueBoxColor: PropTypes.string,
-    valueFontColor: PropTypes.string
+    valueFontColor: PropTypes.string,
+    valueBoxType: PropTypes.string
 }
 
 SegmentedRoundDisplay.defaultProps = {
@@ -171,7 +187,8 @@ SegmentedRoundDisplay.defaultProps = {
     strokeLinecap: 'round',
     displayValue: false,
     valueBoxColor: '#23318C',
-    valueFontColor: '#FFFFFF'
+    valueFontColor: '#FFFFFF',
+    valueBoxType: 'default'
 }
 
 export default SegmentedRoundDisplay;
