@@ -71,7 +71,8 @@ var SegmentedRoundDisplay = function SegmentedRoundDisplay(_ref) {
       strokeLinecap = _ref.strokeLinecap,
       displayValue = _ref.displayValue,
       valueBoxColor = _ref.valueBoxColor,
-      valueFontColor = _ref.valueFontColor;
+      valueFontColor = _ref.valueFontColor,
+      valueBoxType = _ref.valueBoxType;
 
   var _useState = (0, _react.useState)([]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -118,32 +119,53 @@ var SegmentedRoundDisplay = function SegmentedRoundDisplay(_ref) {
     }
 
     var pos = polarToCartesian(arc.centerX, arc.centerY, radius, (angle || arc.filled) + 3);
+
     var boxFinalPosition = {
       x: pos.x - 40,
       y: pos.y + 6
     };
+
     var formatedValue = formatValue ? formatValue(value || totalFilledValue) : parseInt(value || totalFilledValue);
-    return /*#__PURE__*/_react["default"].createElement("g", null, /*#__PURE__*/_react["default"].createElement("rect", {
-      x: boxFinalPosition.x,
-      y: boxFinalPosition.y,
-      width: "80",
-      height: "25",
-      fill: valueBoxColor,
-      rx: 3
-    }), /*#__PURE__*/_react["default"].createElement("rect", {
-      width: "10",
-      height: "10",
-      fill: valueBoxColor,
-      transform: "translate(".concat(pos.x, ",").concat(pos.y, ") rotate(45)"),
-      rx: 2
-    }), /*#__PURE__*/_react["default"].createElement("text", {
-      x: pos.x,
-      "font-weight": "bold",
-      fontSize: 14,
-      y: boxFinalPosition.y + 18,
-      fill: valueFontColor,
-      "text-anchor": "middle"
-    }, formatedValue));
+
+    var displayValueBox;
+    switch (valueBoxType) {
+      case "needle":
+        displayValueBox = /*#__PURE__*/_react["default"].createElement("g", null, /*#__PURE__*/_react["default"].createElement("rect", {
+          x: -57,
+          y: 0,
+          width: "90",
+          height: "8",
+          fill: "hsla(191, 100%, 76%, 1.0)",
+          transform: "translate(".concat(pos.x, ",").concat(pos.y, ") rotate(").concat(angle, ")"),
+          rx: 0
+        }));
+        break;
+        
+      default:
+        displayValueBox = /*#__PURE__*/_react["default"].createElement("g", null, /*#__PURE__*/_react["default"].createElement("rect", {
+          x: boxFinalPosition.x,
+          y: boxFinalPosition.y,
+          width: "80",
+          height: "25",
+          fill: valueBoxColor,
+          rx: 3
+        }), /*#__PURE__*/_react["default"].createElement("rect", {
+          width: "10",
+          height: "10",
+          fill: valueBoxColor,
+          transform: "translate(".concat(pos.x, ",").concat(pos.y, ") rotate(45)"),
+          rx: 2
+        }), /*#__PURE__*/_react["default"].createElement("text", {
+          x: pos.x,
+          "font-weight": "bold",
+          fontSize: 14,
+          y: boxFinalPosition.y + 18,
+          fill: valueFontColor,
+          "text-anchor": "middle"
+        }, formatedValue));
+    }
+
+    return displayValueBox;
   };
 
   (0, _react.useEffect)(function () {
@@ -233,7 +255,8 @@ SegmentedRoundDisplay.propTypes = {
   strokeLinecap: _propTypes["default"].string,
   displayValue: _propTypes["default"].bool,
   valueBoxColor: _propTypes["default"].string,
-  valueFontColor: _propTypes["default"].string
+  valueFontColor: _propTypes["default"].string,
+  valueBoxType: _propTypes["default"].string
 };
 SegmentedRoundDisplay.defaultProps = {
   segments: [],
@@ -250,7 +273,8 @@ SegmentedRoundDisplay.defaultProps = {
   strokeLinecap: 'round',
   displayValue: false,
   valueBoxColor: '#23318C',
-  valueFontColor: '#FFFFFF'
+  valueFontColor: '#FFFFFF',
+  valueBoxType: 'default',
 };
 var _default = SegmentedRoundDisplay;
 exports["default"] = _default;
