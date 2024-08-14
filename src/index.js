@@ -4,24 +4,24 @@ import PropTypes from 'prop-types';
 import { Spring } from 'react-spring/renderprops'
 
 const SegmentedRoundDisplay = ({
-    segments,
-    filledArcWidth,
-    emptyArcWidth,
-    arcSpacing,
-    totalArcSize,
-    emptyArcColor,
-    filledArcColor,
-    radius,
+    segments = [],
+    filledArcWidth = 7,
+    emptyArcWidth = 7,
+    arcSpacing = 7,
+    totalArcSize = 280,
+    radius = 150,
     style,
-    animationDuration,
-    animated,
+    emptyArcColor = '#ADB1CC',
+    filledArcColor = '#5ECCAA',
+    animationDuration = 1000,
+    animated = true,
     formatValue,
-    incompleteArcColor,
-    strokeLinecap,
-    displayValue,
-    valueBoxColor,
-    valueFontColor,
-    valueBoxType
+    incompleteArcColor = '#23318C',
+    strokeLinecap = 'round',
+    displayValue = false,
+    valueBoxColor = '#23318C',
+    valueFontColor = '#FFFFFF',
+    valueBoxType = 'default'    
 }) => {
 
     const [arcs, setArcs] = useState([]);
@@ -84,7 +84,7 @@ const SegmentedRoundDisplay = ({
           case "needle":
             displayValueBox = (
                 <g>
-                    <rect x={-57} y={0} width="90" height="8" fill={valueBoxColor} transform={`translate(${pos.x},${pos.y}) rotate(${angle}`} rx={0} />
+                    <rect x={-57} y={0} width="90" height="8" fill={valueBoxColor} transform={`translate(${pos.x},${pos.y}) rotate(${angle})`} rx={0} />
                 </g>
                 );
 
@@ -170,25 +170,6 @@ SegmentedRoundDisplay.propTypes = {
     valueBoxColor: PropTypes.string,
     valueFontColor: PropTypes.string,
     valueBoxType: PropTypes.string
-}
-
-SegmentedRoundDisplay.defaultProps = {
-    segments: [],
-    filledArcWidth: 7,
-    emptyArcWidth: 7,
-    arcSpacing: 7,
-    totalArcSize: 280,
-    radius: 150,
-    emptyArcColor: '#ADB1CC',
-    filledArcColor: '#5ECCAA',
-    animationDuration: 1000,
-    animated: true,
-    incompleteArcColor: '#23318C',
-    strokeLinecap: 'round',
-    displayValue: false,
-    valueBoxColor: '#23318C',
-    valueFontColor: '#FFFFFF',
-    valueBoxType: 'default'
 }
 
 export default SegmentedRoundDisplay;
