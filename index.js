@@ -1,161 +1,124 @@
 "use strict";
 
-var polarToCartesian = function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
   var angleInRadians = (angleInDegrees - 180) * Math.PI / 180.0;
   return {
     x: centerX + radius * Math.cos(angleInRadians),
     y: centerY + radius * Math.sin(angleInRadians)
   };
 };
-
-var drawArc = function drawArc(x, y, radius, startAngle, endAngle) {
+const drawArc = (x, y, radius, startAngle, endAngle) => {
   var start = polarToCartesian(x, y, radius, endAngle);
   var end = polarToCartesian(x, y, radius, startAngle);
   var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
   var d = ["M", start.x, start.y, "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y].join(" ");
   return d;
 };
-
-var scaleValue = function scaleValue(value, from, to) {
+const scaleValue = (value, from, to) => {
   var scale = (to[1] - to[0]) / (from[1] - from[0]);
   var capped = Math.min(from[1], Math.max(from[0], value)) - from[0];
   return ~~(capped * scale + to[0]);
 };
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
-
+exports.default = void 0;
 var _react = _interopRequireWildcard(require("react"));
-
 var _propTypes = _interopRequireDefault(require("prop-types"));
-
 var _renderprops = require("react-spring/renderprops");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var SegmentedRoundDisplay = function SegmentedRoundDisplay(_ref) {
-  var segments = _ref.segments,
-      filledArcWidth = _ref.filledArcWidth,
-      emptyArcWidth = _ref.emptyArcWidth,
-      arcSpacing = _ref.arcSpacing,
-      totalArcSize = _ref.totalArcSize,
-      emptyArcColor = _ref.emptyArcColor,
-      filledArcColor = _ref.filledArcColor,
-      radius = _ref.radius,
-      style = _ref.style,
-      animationDuration = _ref.animationDuration,
-      animated = _ref.animated,
-      formatValue = _ref.formatValue,
-      incompleteArcColor = _ref.incompleteArcColor,
-      strokeLinecap = _ref.strokeLinecap,
-      displayValue = _ref.displayValue,
-      valueBoxColor = _ref.valueBoxColor,
-      valueFontColor = _ref.valueFontColor,
-      valueBoxType = _ref.valueBoxType;
-
-  var _useState = (0, _react.useState)([]),
-      _useState2 = _slicedToArray(_useState, 2),
-      arcs = _useState2[0],
-      setArcs = _useState2[1];
-
-  var totalArcs = segments.length;
-  var totalSpaces = totalArcs - 1;
-  var totalSpacing = totalSpaces * arcSpacing;
-  var arcSize = (totalArcSize - totalSpacing) / totalArcs;
-  var arcsStart = 90 - totalArcSize / 2;
-  var margin = 35;
-  var svgWidth = (radius + filledArcWidth) * 2 + 2 * margin;
-  var svgHeight = (radius + filledArcWidth) * 2 + 2 * margin;
-  var totalFilledValue = segments.reduce(function (acc, actual) {
-    return acc + actual.filled;
-  }, 0);
-  var createArcs = (0, _react.useCallback)(function () {
-    var newArcs = segments.map(function (goal, index) {
-      var newArc = {
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+const SegmentedRoundDisplay = _ref => {
+  let {
+    segments = [],
+    filledArcWidth = 7,
+    emptyArcWidth = 7,
+    arcSpacing = 7,
+    totalArcSize = 280,
+    radius = 150,
+    style,
+    emptyArcColor = '#ADB1CC',
+    filledArcColor = '#5ECCAA',
+    animationDuration = 1000,
+    animated = true,
+    formatValue,
+    incompleteArcColor = '#23318C',
+    strokeLinecap = 'round',
+    displayValue = false,
+    valueBoxColor = '#23318C',
+    valueFontColor = '#FFFFFF',
+    valueBoxType = 'default'
+  } = _ref;
+  const [arcs, setArcs] = (0, _react.useState)([]);
+  const totalArcs = segments.length;
+  const totalSpaces = totalArcs - 1;
+  const totalSpacing = totalSpaces * arcSpacing;
+  const arcSize = (totalArcSize - totalSpacing) / totalArcs;
+  const arcsStart = 90 - totalArcSize / 2;
+  const margin = 35;
+  const svgWidth = (radius + filledArcWidth) * 2 + 2 * margin;
+  const svgHeight = (radius + filledArcWidth) * 2 + 2 * margin;
+  const totalFilledValue = segments.reduce((acc, actual) => acc + actual.filled, 0);
+  const createArcs = (0, _react.useCallback)(() => {
+    const newArcs = segments.map((goal, index) => {
+      const newArc = {
         centerX: radius + filledArcWidth + margin,
         centerY: radius + filledArcWidth + margin,
         start: arcsStart + index * arcSize,
         end: arcsStart + arcSize + index * arcSize,
         isComplete: goal.total == goal.filled
       };
-
       if (index !== 0) {
         newArc.start += arcSpacing * index;
         newArc.end += arcSpacing * index;
       }
-
       newArc.filled = scaleValue(goal.filled, [0, goal.total], [newArc.start, newArc.end]);
       return newArc;
     });
     setArcs(newArcs);
   }, [segments, arcSize, arcSpacing, filledArcWidth, arcsStart, radius]);
-
-  var renderDisplayValue = function renderDisplayValue(angle, value) {
-    var arc = arcs[arcs.length - 1];
-
+  const renderDisplayValue = (angle, value) => {
+    const arc = arcs[arcs.length - 1];
     if (!arc) {
-      return /*#__PURE__*/_react["default"].createElement("g", null);
+      return /*#__PURE__*/_react.default.createElement("g", null);
     }
-
-    var pos = polarToCartesian(arc.centerX, arc.centerY, radius, (angle || arc.filled) + 3);
-
-    var boxFinalPosition = {
+    const pos = polarToCartesian(arc.centerX, arc.centerY, radius, (angle || arc.filled) + 3);
+    const boxFinalPosition = {
       x: pos.x - 40,
       y: pos.y + 6
     };
-
-    var formatedValue = formatValue ? formatValue(value || totalFilledValue) : parseInt(value || totalFilledValue);
-
+    const formatedValue = formatValue ? formatValue(value || totalFilledValue) : parseInt(value || totalFilledValue);
     var displayValueBox;
     switch (valueBoxType) {
       case "needle":
-        displayValueBox = /*#__PURE__*/_react["default"].createElement("g", null, /*#__PURE__*/_react["default"].createElement("rect", {
+        displayValueBox = /*#__PURE__*/_react.default.createElement("g", null, /*#__PURE__*/_react.default.createElement("rect", {
           x: -57,
           y: 0,
           width: "90",
           height: "8",
-          fill: "hsla(191, 100%, 76%, 1.0)",
-          transform: "translate(".concat(pos.x, ",").concat(pos.y, ") rotate(").concat(angle, ")"),
+          fill: valueBoxColor,
+          transform: `translate(${pos.x},${pos.y}) rotate(${angle})`,
           rx: 0
         }));
         break;
-        
       default:
-        displayValueBox = /*#__PURE__*/_react["default"].createElement("g", null, /*#__PURE__*/_react["default"].createElement("rect", {
+        displayValueBox = /*#__PURE__*/_react.default.createElement("g", null, /*#__PURE__*/_react.default.createElement("rect", {
           x: boxFinalPosition.x,
           y: boxFinalPosition.y,
           width: "80",
           height: "25",
           fill: valueBoxColor,
           rx: 3
-        }), /*#__PURE__*/_react["default"].createElement("rect", {
+        }), /*#__PURE__*/_react.default.createElement("rect", {
           width: "10",
           height: "10",
           fill: valueBoxColor,
-          transform: "translate(".concat(pos.x, ",").concat(pos.y, ") rotate(45)"),
+          transform: `translate(${pos.x},${pos.y}) rotate(45)`,
           rx: 2
-        }), /*#__PURE__*/_react["default"].createElement("text", {
+        }), /*#__PURE__*/_react.default.createElement("text", {
           x: pos.x,
           "font-weight": "bold",
           fontSize: 14,
@@ -164,60 +127,52 @@ var SegmentedRoundDisplay = function SegmentedRoundDisplay(_ref) {
           "text-anchor": "middle"
         }, formatedValue));
     }
-
     return displayValueBox;
   };
-
-  (0, _react.useEffect)(function () {
+  (0, _react.useEffect)(() => {
     createArcs();
   }, [segments, createArcs]);
-
   if (arcs.length == 0) {
-    return /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null);
+    return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null);
   }
-
-  return /*#__PURE__*/_react["default"].createElement("svg", {
+  return /*#__PURE__*/_react.default.createElement("svg", {
     width: svgWidth,
     height: svgHeight,
     style: style
-  }, arcs.map(function (arc, index) {
-    return /*#__PURE__*/_react["default"].createElement("g", {
-      key: index.toString()
-    }, /*#__PURE__*/_react["default"].createElement("path", {
-      fill: "none",
-      stroke: emptyArcColor,
-      strokeWidth: emptyArcWidth,
-      strokeLinecap: strokeLinecap,
-      d: drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.end)
-    }), animated && arc.filled > arc.start && /*#__PURE__*/_react["default"].createElement(_renderprops.Spring, {
-      from: {
-        x: arc.start,
-        y: 0
-      },
-      to: {
-        x: arc.filled + 0.6,
-        y: filledArcWidth
-      },
-      config: {
-        duration: animationDuration / totalArcs,
-        delay: animationDuration / totalArcs * index
-      }
-    }, function (props) {
-      return /*#__PURE__*/_react["default"].createElement("path", {
-        fill: "none",
-        stroke: arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor,
-        strokeWidth: props.y,
-        strokeLinecap: strokeLinecap,
-        d: drawArc(arc.centerX, arc.centerY, radius, arc.start, props.x)
-      });
-    }), !animated && arc.filled > arc.start && /*#__PURE__*/_react["default"].createElement("path", {
-      fill: "none",
-      stroke: arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor,
-      strokeWidth: filledArcWidth,
-      strokeLinecap: strokeLinecap,
-      d: drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.filled)
-    }));
-  }), displayValue && /*#__PURE__*/_react["default"].createElement("g", null, !animated && renderDisplayValue(), animated && /*#__PURE__*/_react["default"].createElement(_renderprops.Spring, {
+  }, arcs.map((arc, index) => /*#__PURE__*/_react.default.createElement("g", {
+    key: index.toString()
+  }, /*#__PURE__*/_react.default.createElement("path", {
+    fill: "none",
+    stroke: emptyArcColor,
+    strokeWidth: emptyArcWidth,
+    strokeLinecap: strokeLinecap,
+    d: drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.end)
+  }), animated && arc.filled > arc.start && /*#__PURE__*/_react.default.createElement(_renderprops.Spring, {
+    from: {
+      x: arc.start,
+      y: 0
+    },
+    to: {
+      x: arc.filled + 0.6,
+      y: filledArcWidth
+    },
+    config: {
+      duration: animationDuration / totalArcs,
+      delay: animationDuration / totalArcs * index
+    }
+  }, props => /*#__PURE__*/_react.default.createElement("path", {
+    fill: "none",
+    stroke: arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor,
+    strokeWidth: props.y,
+    strokeLinecap: strokeLinecap,
+    d: drawArc(arc.centerX, arc.centerY, radius, arc.start, props.x)
+  })), !animated && arc.filled > arc.start && /*#__PURE__*/_react.default.createElement("path", {
+    fill: "none",
+    stroke: arc.isComplete ? filledArcColor : incompleteArcColor || filledArcColor,
+    strokeWidth: filledArcWidth,
+    strokeLinecap: strokeLinecap,
+    d: drawArc(arc.centerX, arc.centerY, radius, arc.start, arc.filled)
+  }))), displayValue && /*#__PURE__*/_react.default.createElement("g", null, !animated && renderDisplayValue(), animated && /*#__PURE__*/_react.default.createElement(_renderprops.Spring, {
     from: {
       x: arcsStart,
       value: 0
@@ -229,52 +184,30 @@ var SegmentedRoundDisplay = function SegmentedRoundDisplay(_ref) {
     config: {
       duration: animationDuration
     }
-  }, function (props) {
-    return renderDisplayValue(props.x, props.value);
-  })));
+  }, props => renderDisplayValue(props.x, props.value))));
 };
-
 SegmentedRoundDisplay.propTypes = {
-  segments: _propTypes["default"].arrayOf(_propTypes["default"].shape({
-    total: _propTypes["default"].number.isRequired,
-    filled: _propTypes["default"].number.isRequired
+  segments: _propTypes.default.arrayOf(_propTypes.default.shape({
+    total: _propTypes.default.number.isRequired,
+    filled: _propTypes.default.number.isRequired
   })),
-  filledArcWidth: _propTypes["default"].number,
-  emptyArcWidth: _propTypes["default"].number,
-  arcSpacing: _propTypes["default"].number,
-  totalArcSize: _propTypes["default"].number,
-  radius: _propTypes["default"].number,
-  emptyArcColor: _propTypes["default"].string,
-  filledArcColor: _propTypes["default"].string,
-  formatAmount: _propTypes["default"].func,
-  style: _propTypes["default"].object,
-  animationDuration: _propTypes["default"].number,
-  animated: _propTypes["default"].bool,
-  formatValue: _propTypes["default"].func,
-  incompleteArcColor: _propTypes["default"].string,
-  strokeLinecap: _propTypes["default"].string,
-  displayValue: _propTypes["default"].bool,
-  valueBoxColor: _propTypes["default"].string,
-  valueFontColor: _propTypes["default"].string,
-  valueBoxType: _propTypes["default"].string
+  filledArcWidth: _propTypes.default.number,
+  emptyArcWidth: _propTypes.default.number,
+  arcSpacing: _propTypes.default.number,
+  totalArcSize: _propTypes.default.number,
+  radius: _propTypes.default.number,
+  emptyArcColor: _propTypes.default.string,
+  filledArcColor: _propTypes.default.string,
+  formatAmount: _propTypes.default.func,
+  style: _propTypes.default.object,
+  animationDuration: _propTypes.default.number,
+  animated: _propTypes.default.bool,
+  formatValue: _propTypes.default.func,
+  incompleteArcColor: _propTypes.default.string,
+  strokeLinecap: _propTypes.default.string,
+  displayValue: _propTypes.default.bool,
+  valueBoxColor: _propTypes.default.string,
+  valueFontColor: _propTypes.default.string,
+  valueBoxType: _propTypes.default.string
 };
-SegmentedRoundDisplay.defaultProps = {
-  segments: [],
-  filledArcWidth: 7,
-  emptyArcWidth: 7,
-  arcSpacing: 7,
-  totalArcSize: 280,
-  radius: 150,
-  emptyArcColor: '#ADB1CC',
-  filledArcColor: '#5ECCAA',
-  animationDuration: 1000,
-  animated: true,
-  incompleteArcColor: '#23318C',
-  strokeLinecap: 'round',
-  displayValue: false,
-  valueBoxColor: '#23318C',
-  valueFontColor: '#FFFFFF',
-  valueBoxType: 'default',
-};
-var _default = SegmentedRoundDisplay;
-exports["default"] = _default;
+var _default = exports.default = SegmentedRoundDisplay;
