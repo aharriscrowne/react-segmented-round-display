@@ -1,6 +1,6 @@
 {
   "name": "react-segmented-round-display",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "react-segmented-round-display provides a simple ARC component, drawn with SVG, it can have one or more segments and its easy configurable.",
   "main": "index.js",
   "directories": {
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "prop-types": "^15.7.2",
-    "react-spring": "^8.0.27"
+    "@react-spring/web": "^9.6.1"
   },
   "peerDependencies": {
     "react": "^16.6.1",
