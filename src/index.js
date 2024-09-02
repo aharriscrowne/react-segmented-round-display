@@ -84,7 +84,7 @@ const SegmentedRoundDisplay = ({
           case "needle":
             displayValueBox = (
                 <g>
-                    <rect x={-57} y={0} width="90" height="8" fill={valueBoxColor} transform={`translate(${pos.x},${pos.y}) rotate(${angle})`} rx={0} />
+                    <rect x={-57} y={0} width="90" height="8" fill={valueBoxColor} transform={`translate(${pos.x},${pos.y}) rotate(${angle || arc.filled})`} rx={0} />
                 </g>
                 );
 
